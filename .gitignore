@@ -28,3 +28,7 @@ Thumbs.db
 # Temp
 *.tmp
 tmp/
+
+# Docs
+project.md
+implementation.md
