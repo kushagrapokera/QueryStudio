@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import type { Connection, SchemaTable, ForeignKey } from "../../types";
+import type { Connection, SchemaTable } from "../../types";
 import { getSchema } from "../../api/client";
 
 interface SchemaBrowserProps {
@@ -43,8 +43,8 @@ function TableRow({ table }: { table: SchemaTable }) {
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
-            title="Has primary key"
           >
+            <title>Has primary key</title>
             <path
               strokeLinecap="round"
               strokeLinejoin="round"

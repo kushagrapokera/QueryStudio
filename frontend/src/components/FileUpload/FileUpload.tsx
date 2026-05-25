@@ -44,49 +44,53 @@ export default function FileUpload({
     <div>
       {activeDataset ? (
         <div>
-          <div className="flex items-center justify-between mb-2">
-            <div className="min-w-0 flex-1">
-              <p className="text-sm font-medium text-gray-800 truncate">
-                {activeDataset.filename}
-              </p>
-              <p className="text-xs text-gray-400">
-                ID: {activeDataset.dataset_id}
-              </p>
-            </div>
-            <div className="flex items-center gap-1 shrink-0 ml-2">
+          <div className="text-[11px] font-bold tracking-wider text-on-surface-variant mb-4 uppercase select-none">Dataset</div>
+          
+          <div className="flex items-center justify-between mb-1">
+            <span className="font-bold text-sm text-on-surface truncate pr-2 max-w-[170px]" title={activeDataset.filename}>
+              {activeDataset.filename}
+            </span>
+            <div className="flex gap-3 text-xs text-on-surface-variant shrink-0 select-none">
               <button
                 onClick={() => setExpanded(!expanded)}
-                className="text-xs text-gray-400 hover:text-gray-600 transition p-1"
+                className="hover:text-primary transition-colors cursor-pointer"
               >
                 {expanded ? "Collapse" : "Expand"}
               </button>
               <button
                 onClick={() => onDatasetChange(null)}
-                className="text-xs text-gray-400 hover:text-red-500 transition"
+                className="hover:text-red-500 transition-colors cursor-pointer font-medium"
               >
                 Remove
               </button>
             </div>
           </div>
+          
+          <div className="text-xs text-on-surface-variant mb-4 select-none">ID: {activeDataset.dataset_id.slice(0, 8)}</div>
 
           {expanded && activeDataset.profile && (
             <DatasetProfile profile={activeDataset.profile} />
           )}
         </div>
       ) : (
-        <label className="flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-lg p-4 cursor-pointer hover:border-purple-400 transition">
-          <span className="text-xs text-gray-500 mb-1">
-            {uploading ? "Uploading..." : "Upload CSV or Excel"}
-          </span>
-          <span className="text-xs text-gray-400">Click to browse</span>
-          <input
-            type="file"
-            accept=".csv,.xlsx,.xls"
-            onChange={handleFile}
-            className="hidden"
-            disabled={uploading}
-          />
-        </label>
+        <div>
+          <div className="text-[11px] font-bold tracking-wider text-on-surface-variant mb-4 uppercase select-none">Dataset</div>
+          
+          <label className="flex flex-col items-center justify-center border border-dashed border-sidebar-border bg-surface-bright/60 hover:bg-surface-bright rounded-xl p-6 cursor-pointer hover:border-primary/50 transition-all select-none group">
+            <span className="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors mb-2" style={{ fontSize: "28px" }}>cloud_upload</span>
+            <span className="text-xs font-semibold text-on-surface mb-1">
+              {uploading ? "Uploading dataset..." : "Upload CSV or Excel"}
+            </span>
+            <span className="text-[10px] text-on-surface-variant">Click to choose a file</span>
+            <input
+              type="file"
+              accept=".csv,.xlsx,.xls"
+              onChange={handleFile}
+              className="hidden"
+              disabled={uploading}
+            />
+          </label>
+        </div>
       )}
     </div>
   );

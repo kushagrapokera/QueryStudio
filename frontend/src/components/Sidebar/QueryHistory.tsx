@@ -9,43 +9,35 @@ interface QueryHistoryProps {
   onSelect: (query: string) => void;
 }
 
-function formatTime(ts: number) {
-  const d = new Date(ts);
-  return d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-}
+
 
 export default function QueryHistory({ history, onSelect }: QueryHistoryProps) {
   if (!history.length) {
     return (
-      <p className="text-xs text-gray-400">
-        No queries yet. Type a question and press Run.
+      <p className="text-xs text-on-surface-variant/60 italic px-1">
+        No queries in workspace history
       </p>
     );
   }
 
   return (
-    <div className="space-y-1 max-h-48 overflow-y-auto">
+    <ul className="space-y-2 mt-2 max-h-48 overflow-y-auto no-scrollbar">
       {history.map((item, i) => (
-        <button
+        <li
           key={i}
           onClick={() => onSelect(item.query)}
-          className="w-full text-left p-2 rounded hover:bg-gray-100 transition text-xs"
+          className="flex gap-2 text-xs text-on-surface-variant hover:text-on-surface cursor-pointer select-none transition-colors"
         >
-          <div className="flex items-center gap-2">
-            <span
-              className={`shrink-0 w-1.5 h-1.5 rounded-full ${
-                item.type === "error"
-                  ? "bg-red-400"
-                  : item.type === "chart"
-                  ? "bg-purple-400"
-                  : "bg-blue-400"
-              }`}
-            />
-            <span className="text-gray-800 truncate flex-1">{item.query}</span>
-          </div>
-          <span className="text-gray-400 ml-3.5">{formatTime(item.timestamp)}</span>
-        </button>
+          <span className={
+            item.type === "error"
+              ? "text-red-500 font-bold"
+              : item.type === "chart"
+              ? "text-purple-500 font-bold"
+              : "text-blue-500 font-bold"
+          }>•</span>
+          <span className="truncate flex-1" title={item.query}>{item.query}</span>
+        </li>
       ))}
-    </div>
+    </ul>
   );
 }

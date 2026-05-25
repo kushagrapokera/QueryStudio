@@ -113,34 +113,34 @@ export default function ConnectionManager({
 
   // When a connection is active, show its info
   if (activeConnection) {
-    const params = activeConnection.params as Record<string, string>;
+    const params = activeConnection.params as any;
     const isDirect = activeConnection.type === "direct";
     return (
       <div>
-        <div className="bg-white border border-gray-200 rounded-lg p-3">
+        <div className="bg-surface-bright border border-sidebar-border rounded-lg p-3">
           <div className="flex items-center justify-between mb-2">
             <div className="min-w-0 flex-1">
-              <p className="text-sm font-medium text-gray-800 truncate">
+              <p className="text-sm font-medium text-on-surface truncate">
                 {activeConnection.label}
               </p>
-              <span className="text-xs px-1.5 py-0.5 rounded-full bg-blue-100 text-blue-700 font-medium">
+              <span className="text-xs px-1.5 py-0.5 rounded-full bg-surface-container text-on-surface-variant font-medium">
                 {activeConnection.type.toUpperCase()}
               </span>
             </div>
             <button
               onClick={() => handleDelete(activeConnection.id)}
-              className="text-xs text-gray-400 hover:text-red-500 transition shrink-0 ml-2"
+              className="text-xs text-on-surface-variant hover:text-red-500 transition shrink-0 ml-2"
             >
               Remove
             </button>
           </div>
-          <div className="text-xs text-gray-500 space-y-0.5 mt-2">
+          <div className="text-xs text-on-surface-variant space-y-0.5 mt-2">
             {isDirect ? (
               <>
                 <p>
                   {params.db_type}: {params.host}:{params.port}/{params.database}
                 </p>
-                <p className="text-gray-400">User: {params.user}</p>
+                <p className="text-on-surface-variant/80">User: {params.user}</p>
                 {activeConnection.read_only_reminder && (
                   <p className="text-amber-600 font-medium mt-1">
                     Read-only mode active
@@ -164,7 +164,7 @@ export default function ConnectionManager({
       {/* Saved connections list */}
       {connections.length > 0 && !showForm && (
         <div className="mb-3">
-          <h4 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
+          <h4 className="text-xs font-semibold text-on-surface-variant uppercase tracking-wider mb-2">
             Saved Connections
           </h4>
           <div className="space-y-1">
@@ -172,14 +172,14 @@ export default function ConnectionManager({
               <button
                 key={conn.id}
                 onClick={() => handleSelect(conn)}
-                className="w-full text-left p-2 rounded hover:bg-gray-100 transition text-xs"
+                className="w-full text-left p-2 rounded hover:bg-surface-container transition text-xs"
               >
                 <div className="flex items-center gap-2">
                   <span className="w-1.5 h-1.5 rounded-full bg-green-400 shrink-0" />
-                  <span className="text-gray-800 truncate flex-1">
+                  <span className="text-on-surface truncate flex-1">
                     {conn.label}
                   </span>
-                  <span className="text-gray-400 text-[10px] uppercase">
+                  <span className="text-on-surface-variant text-[10px] uppercase">
                     {conn.type}
                   </span>
                 </div>
@@ -191,14 +191,14 @@ export default function ConnectionManager({
 
       {/* Add new connection button or form */}
       {showForm ? (
-        <div className="border border-gray-200 rounded-lg p-3 space-y-2 text-xs">
-          <h4 className="font-semibold text-gray-700">New Connection</h4>
+        <div className="border border-sidebar-border rounded-lg p-3 space-y-2 text-xs bg-surface-bright">
+          <h4 className="font-semibold text-on-surface">New Connection</h4>
 
           {/* Label */}
           <div>
-            <label className="block text-gray-500 mb-0.5">Label (optional)</label>
+            <label className="block text-on-surface-variant mb-0.5">Label (optional)</label>
             <input
-              className="w-full border border-gray-200 rounded px-2 py-1 text-gray-800"
+              className="w-full border border-sidebar-border rounded px-2 py-1 text-on-surface bg-surface"
               value={label}
               onChange={(e) => setLabel(e.target.value)}
               placeholder="My Database"
@@ -207,13 +207,13 @@ export default function ConnectionManager({
 
           {/* Type selector */}
           <div>
-            <label className="block text-gray-500 mb-0.5">Type</label>
+            <label className="block text-on-surface-variant mb-0.5">Type</label>
             <div className="flex gap-2">
               <button
                 className={`flex-1 py-1 rounded font-medium transition ${
                   connType === "direct"
-                    ? "bg-blue-100 text-blue-700"
-                    : "bg-gray-100 text-gray-500 hover:text-gray-700"
+                    ? "bg-surface-container text-on-surface"
+                    : "bg-surface text-on-surface-variant hover:text-on-surface"
                 }`}
                 onClick={() => setConnType("direct")}
               >
@@ -222,8 +222,8 @@ export default function ConnectionManager({
               <button
                 className={`flex-1 py-1 rounded font-medium transition ${
                   connType === "mcp"
-                    ? "bg-blue-100 text-blue-700"
-                    : "bg-gray-100 text-gray-500 hover:text-gray-700"
+                    ? "bg-surface-container text-on-surface"
+                    : "bg-surface text-on-surface-variant hover:text-on-surface"
                 }`}
                 onClick={() => setConnType("mcp")}
               >
@@ -236,13 +236,13 @@ export default function ConnectionManager({
             <>
               {/* DB Type */}
               <div>
-                <label className="block text-gray-500 mb-0.5">Database</label>
+                <label className="block text-on-surface-variant mb-0.5">Database</label>
                 <div className="flex gap-2">
                   <button
                     className={`flex-1 py-1 rounded font-medium transition ${
                       dbType === "mysql"
-                        ? "bg-blue-100 text-blue-700"
-                        : "bg-gray-100 text-gray-500"
+                        ? "bg-surface-container text-on-surface"
+                        : "bg-surface text-on-surface-variant"
                     }`}
                     onClick={() => {
                       setDbType("mysql");
@@ -254,8 +254,8 @@ export default function ConnectionManager({
                   <button
                     className={`flex-1 py-1 rounded font-medium transition ${
                       dbType === "postgres"
-                        ? "bg-blue-100 text-blue-700"
-                        : "bg-gray-100 text-gray-500"
+                        ? "bg-surface-container text-on-surface"
+                        : "bg-surface text-on-surface-variant"
                     }`}
                     onClick={() => {
                       setDbType("postgres");
@@ -269,17 +269,17 @@ export default function ConnectionManager({
 
               <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="block text-gray-500 mb-0.5">Host</label>
+                  <label className="block text-on-surface-variant mb-0.5">Host</label>
                   <input
-                    className="w-full border border-gray-200 rounded px-2 py-1 text-gray-800"
+                    className="w-full border border-sidebar-border rounded px-2 py-1 text-on-surface bg-surface"
                     value={host}
                     onChange={(e) => setHost(e.target.value)}
                   />
                 </div>
                 <div>
-                  <label className="block text-gray-500 mb-0.5">Port</label>
+                  <label className="block text-on-surface-variant mb-0.5">Port</label>
                   <input
-                    className="w-full border border-gray-200 rounded px-2 py-1 text-gray-800"
+                    className="w-full border border-sidebar-border rounded px-2 py-1 text-on-surface bg-surface"
                     value={port}
                     onChange={(e) => setPort(e.target.value)}
                   />
@@ -287,9 +287,9 @@ export default function ConnectionManager({
               </div>
 
               <div>
-                <label className="block text-gray-500 mb-0.5">Database</label>
+                <label className="block text-on-surface-variant mb-0.5">Database</label>
                 <input
-                  className="w-full border border-gray-200 rounded px-2 py-1 text-gray-800"
+                  className="w-full border border-sidebar-border rounded px-2 py-1 text-on-surface bg-surface"
                   value={database}
                   onChange={(e) => setDatabase(e.target.value)}
                   placeholder="doctor_finder"
@@ -297,18 +297,18 @@ export default function ConnectionManager({
               </div>
 
               <div>
-                <label className="block text-gray-500 mb-0.5">User</label>
+                <label className="block text-on-surface-variant mb-0.5">User</label>
                 <input
-                  className="w-full border border-gray-200 rounded px-2 py-1 text-gray-800"
+                  className="w-full border border-sidebar-border rounded px-2 py-1 text-on-surface bg-surface"
                   value={user}
                   onChange={(e) => setUser(e.target.value)}
                 />
               </div>
 
               <div>
-                <label className="block text-gray-500 mb-0.5">Password</label>
+                <label className="block text-on-surface-variant mb-0.5">Password</label>
                 <input
-                  className="w-full border border-gray-200 rounded px-2 py-1 text-gray-800"
+                  className="w-full border border-sidebar-border rounded px-2 py-1 text-on-surface bg-surface"
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -318,20 +318,20 @@ export default function ConnectionManager({
           ) : (
             <>
               <div>
-                <label className="block text-gray-500 mb-0.5">MCP URL</label>
+                <label className="block text-on-surface-variant mb-0.5">MCP URL</label>
                 <input
-                  className="w-full border border-gray-200 rounded px-2 py-1 text-gray-800"
+                  className="w-full border border-sidebar-border rounded px-2 py-1 text-on-surface bg-surface"
                   value={mcpUrl}
                   onChange={(e) => setMcpUrl(e.target.value)}
                   placeholder="http://localhost:8080/mcp"
                 />
               </div>
               <div>
-                <label className="block text-gray-500 mb-0.5">
+                <label className="block text-on-surface-variant mb-0.5">
                   API Key (optional)
                 </label>
                 <input
-                  className="w-full border border-gray-200 rounded px-2 py-1 text-gray-800"
+                  className="w-full border border-sidebar-border rounded px-2 py-1 text-on-surface bg-surface"
                   type="password"
                   value={mcpApiKey}
                   onChange={(e) => setMcpApiKey(e.target.value)}
@@ -348,7 +348,7 @@ export default function ConnectionManager({
             <button
               onClick={handleSave}
               disabled={saving}
-              className="flex-1 py-1.5 rounded bg-blue-600 text-white font-medium hover:bg-blue-700 disabled:opacity-50 transition text-xs"
+              className="flex-1 py-1.5 rounded bg-primary text-on-primary font-medium hover:opacity-90 disabled:opacity-50 transition text-xs"
             >
               {saving ? "Testing & Saving..." : "Test & Save"}
             </button>
@@ -358,7 +358,7 @@ export default function ConnectionManager({
                 resetForm();
                 setError(null);
               }}
-              className="px-3 py-1.5 rounded bg-gray-100 text-gray-600 hover:bg-gray-200 transition text-xs"
+              className="px-3 py-1.5 rounded bg-surface text-on-surface-variant hover:bg-surface-container transition text-xs"
             >
               Cancel
             </button>
@@ -367,7 +367,7 @@ export default function ConnectionManager({
       ) : (
         <button
           onClick={() => setShowForm(true)}
-          className="w-full py-2 rounded-lg border-2 border-dashed border-gray-300 text-xs text-gray-500 hover:border-blue-400 hover:text-blue-600 transition"
+          className="w-full py-2 rounded-lg border-2 border-dashed border-sidebar-border text-xs text-on-surface-variant hover:border-primary/60 hover:text-on-surface transition"
         >
           + Add Connection
         </button>

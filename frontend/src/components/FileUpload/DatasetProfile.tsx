@@ -9,29 +9,28 @@ export default function DatasetProfile({ profile }: DatasetProfileProps) {
   const [rows, cols] = shape;
 
   return (
-    <div className="text-xs text-gray-600 space-y-2">
-      {/* Shape */}
-      <div className="bg-gray-50 rounded px-2 py-1.5">
-        <span className="font-medium text-gray-700">{rows}</span> rows ×{" "}
-        <span className="font-medium text-gray-700">{cols}</span> columns
+    <div className="space-y-6 text-on-surface">
+      {/* Shape Pill */}
+      <div className="bg-surface-container-low px-3 py-2 rounded-lg text-xs text-on-secondary-container/80 mb-6 select-none font-medium">
+        {rows} rows × {cols} columns
       </div>
 
-      {/* Columns & Types */}
+      {/* Columns & Types list */}
       <div>
-        <p className="font-medium text-gray-700 mb-1">Columns</p>
-        <div className="overflow-x-auto">
-          <table className="w-full text-xs border-collapse">
+        <div className="text-[13px] font-semibold text-on-surface mb-3">Columns</div>
+        <div className="bg-surface-bright rounded-xl border border-sidebar-border overflow-hidden">
+          <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-gray-50">
-                <th className="px-1.5 py-1 text-left font-medium text-gray-500 border-b border-gray-200">Column</th>
-                <th className="px-1.5 py-1 text-left font-medium text-gray-500 border-b border-gray-200">Type</th>
+              <tr className="border-b border-sidebar-border bg-surface-container-lowest">
+                <th className="px-3 py-2 text-[11px] font-bold text-on-surface-variant uppercase tracking-wider">Column</th>
+                <th className="px-3 py-2 text-[11px] font-bold text-on-surface-variant uppercase tracking-wider">Type</th>
               </tr>
             </thead>
             <tbody>
               {columns.map((col) => (
-                <tr key={col} className="border-b border-gray-100">
-                  <td className="px-1.5 py-1 text-gray-800 whitespace-nowrap">{col}</td>
-                  <td className="px-1.5 py-1 text-gray-400">{dtypes[col]}</td>
+                <tr key={col} className="border-b border-sidebar-border last:border-0">
+                  <td className="px-3 py-2 text-xs text-on-surface font-medium">{col}</td>
+                  <td className="px-3 py-2 text-xs text-on-surface-variant">{dtypes[col] || "any"}</td>
                 </tr>
               ))}
             </tbody>
@@ -39,56 +38,71 @@ export default function DatasetProfile({ profile }: DatasetProfileProps) {
         </div>
       </div>
 
-      {/* Numeric Stats */}
+      {/* Numeric Stats Cards */}
       {Object.keys(numeric_stats).length > 0 && (
         <div>
-          <p className="font-medium text-gray-700 mb-1">Numeric Stats</p>
-          {Object.entries(numeric_stats).map(([col, stats]) => (
-            <div key={col} className="bg-gray-50 rounded px-2 py-1 mb-1">
-              <p className="text-gray-800 font-medium">{col}</p>
-              <div className="flex gap-3 text-gray-500">
-                <span>Min: {stats.min}</span>
-                <span>Max: {stats.max}</span>
-                <span>Mean: {stats.mean}</span>
+          <div className="text-[13px] font-semibold text-on-surface mb-3">Numeric Stats</div>
+          <div className="space-y-3">
+            {Object.entries(numeric_stats).map(([col, stats]) => (
+              <div key={col} className="bg-surface-container rounded-xl p-4 border border-sidebar-border/30">
+                <div className="text-xs font-bold mb-3 text-on-surface">{col}</div>
+                <div className="grid grid-cols-3 gap-2">
+                  <div>
+                    <div className="text-[10px] text-on-surface-variant uppercase tracking-wider font-semibold">Min:</div>
+                    <div className="text-xs text-on-surface mt-0.5">{stats.min !== undefined ? stats.min.toLocaleString() : "-"}</div>
+                  </div>
+                  <div>
+                    <div className="text-[10px] text-on-surface-variant uppercase tracking-wider font-semibold">Max:</div>
+                    <div className="text-xs text-on-surface mt-0.5">{stats.max !== undefined ? stats.max.toLocaleString() : "-"}</div>
+                  </div>
+                  <div>
+                    <div className="text-[10px] text-on-surface-variant uppercase tracking-wider font-semibold">Mean:</div>
+                    <div className="text-xs text-on-surface mt-0.5">
+                      {stats.mean !== undefined ? Number(stats.mean.toFixed(2)).toLocaleString() : "-"}
+                    </div>
+                  </div>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       )}
 
-      {/* Sample Rows */}
+      {/* Sample Rows Preview */}
       {sample_rows.length > 0 && (
         <div>
-          <p className="font-medium text-gray-700 mb-1">Sample (first {sample_rows.length} rows)</p>
-          <div className="overflow-x-auto">
-            <table className="w-full text-xs border-collapse">
-              <thead>
-                <tr className="bg-gray-50">
-                  {columns.map((col) => (
-                    <th
-                      key={col}
-                      className="px-1.5 py-1 text-left font-medium text-gray-500 border-b border-gray-200 whitespace-nowrap"
-                    >
-                      {col}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {sample_rows.map((row, i) => (
-                  <tr key={i} className="border-b border-gray-100">
-                    {row.map((cell, j) => (
-                      <td
-                        key={j}
-                        className="px-1.5 py-1 text-gray-700 whitespace-nowrap truncate max-w-24"
+          <div className="text-[13px] font-semibold text-on-surface mb-3">Sample (first {sample_rows.length} rows)</div>
+          <div className="bg-surface-bright rounded-xl border border-sidebar-border overflow-hidden">
+            <div className="overflow-x-auto no-scrollbar">
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="border-b border-sidebar-border bg-surface-container-lowest">
+                    {columns.map((col) => (
+                      <th
+                        key={col}
+                        className="px-3 py-2 text-[11px] font-bold text-on-surface-variant uppercase tracking-wider whitespace-nowrap"
                       >
-                        {cell?.toString() ?? ""}
-                      </td>
+                        {col}
+                      </th>
                     ))}
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {sample_rows.map((row, i) => (
+                    <tr key={i} className="border-b border-sidebar-border last:border-0 hover:bg-surface-container-low/20 transition-colors">
+                      {row.map((cell, j) => (
+                        <td
+                          key={j}
+                          className="px-3 py-2 text-xs text-on-surface whitespace-nowrap truncate max-w-28"
+                        >
+                          {cell?.toString() ?? ""}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       )}

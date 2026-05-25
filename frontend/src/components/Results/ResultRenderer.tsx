@@ -22,7 +22,7 @@ function TextResult({ content }: { content?: string }) {
 
   return (
     <div>
-      <pre className="bg-gray-50 p-4 rounded-lg text-sm whitespace-pre-wrap font-mono text-gray-700 overflow-x-auto">
+      <pre className="bg-surface-container-low p-4 rounded-xl text-sm whitespace-pre-wrap font-mono text-on-surface/80 overflow-x-auto border border-sidebar-border/40">
         {displayLines.join("\n")}
       </pre>
       {isLong && (
@@ -37,60 +37,20 @@ function TextResult({ content }: { content?: string }) {
   );
 }
 
-function CodeBlock({ code, label }: { code: string; label: string }) {
-  const [showCode, setShowCode] = useState(false);
-  return (
-    <div>
-      <button
-        onClick={() => setShowCode(!showCode)}
-        className="text-xs text-gray-400 hover:text-gray-600 transition flex items-center gap-1"
-      >
-        <svg
-          className={`w-3 h-3 transition ${showCode ? "rotate-90" : ""}`}
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M9 5l7 7-7 7"
-          />
-        </svg>
-        {showCode ? "Hide" : "Show"} generated {label}
-      </button>
-      {showCode && (
-        <pre className="mt-2 bg-gray-900 text-gray-100 p-4 rounded-lg text-xs overflow-x-auto font-mono">
-          {code}
-        </pre>
-      )}
-    </div>
-  );
-}
-
 export default function ResultRenderer({ result }: ResultRendererProps) {
   return (
     <div className="space-y-3">
-      {/* Main result */}
       {result.type === "table" && (
-        <TableResult columns={result.columns ?? []} rows={result.rows ?? []} />
+        <TableResult columns={result.columns ?? []} rows={(result.rows ?? []) as (string | number)[][]} />
       )}
-      {result.type === "chart" && <ChartResult figure={result.figure} />}
+      {result.type === "chart" && <ChartResult figure={(result as { figure?: unknown }).figure} />}
       {result.type === "error" && (
-        <ErrorResult ename={result.ename} message={result.message ?? result.error} />
+        <ErrorResult
+          ename={result.ename}
+          message={result.message || ("error" in result ? (result.error as string) : undefined)}
+        />
       )}
       {result.type === "text" && <TextResult content={result.content} />}
-
-      {/* Show generated code */}
-      {"_generated_code" in result && result._generated_code && (
-        <CodeBlock code={result._generated_code} label="code" />
-      )}
-
-      {/* Show generated SQL */}
-      {"_generated_sql" in result && result._generated_sql && (
-        <CodeBlock code={result._generated_sql} label="SQL" />
-      )}
     </div>
   );
 }
