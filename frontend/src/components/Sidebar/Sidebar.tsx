@@ -1,6 +1,8 @@
-import type { Dataset } from "../../types";
+import type { Connection, Dataset } from "../../types";
 import FileUpload from "../FileUpload/FileUpload";
+import ConnectionManager from "../ConnectionManager/ConnectionManager";
 import QueryHistory from "./QueryHistory";
+import SchemaBrowser from "./SchemaBrowser";
 
 interface HistoryItem {
   query: string;
@@ -13,6 +15,8 @@ interface SidebarProps {
   onModeChange: (mode: "python" | "sql") => void;
   activeDataset: Dataset | null;
   onDatasetChange: (ds: Dataset | null) => void;
+  activeConnection: Connection | null;
+  onConnectionChange: (conn: Connection | null) => void;
   queryHistory: HistoryItem[];
   onHistorySelect: (query: string) => void;
 }
@@ -22,6 +26,8 @@ export default function Sidebar({
   onModeChange,
   activeDataset,
   onDatasetChange,
+  activeConnection,
+  onConnectionChange,
   queryHistory,
   onHistorySelect,
 }: SidebarProps) {
@@ -66,15 +72,26 @@ export default function Sidebar({
         </div>
       )}
 
-      {/* SQL Connection (placeholder for Phase 2) */}
+      {/* SQL Connection Manager (SQL mode) */}
       {mode === "sql" && (
         <div className="p-4 border-b border-gray-200">
           <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
             Database
           </h3>
-          <p className="text-xs text-gray-400">
-            SQL connections will be available in Phase 2.
-          </p>
+          <ConnectionManager
+            activeConnection={activeConnection}
+            onConnectionChange={onConnectionChange}
+          />
+        </div>
+      )}
+
+      {/* Schema Browser (SQL mode, when connection active) */}
+      {mode === "sql" && activeConnection && (
+        <div className="p-4 border-b border-gray-200">
+          <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">
+            Schema
+          </h3>
+          <SchemaBrowser connection={activeConnection} />
         </div>
       )}
 

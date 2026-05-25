@@ -36,9 +36,13 @@ def create_app(config_class=Config):
 
     from app.routes.upload import upload_bp
     from app.routes.python_query import python_query_bp
+    from app.routes.connections import connections_bp
+    from app.routes.sql_query import sql_query_bp
 
     app.register_blueprint(upload_bp, url_prefix="/api")
     app.register_blueprint(python_query_bp, url_prefix="/api")
+    app.register_blueprint(connections_bp, url_prefix="/api")
+    app.register_blueprint(sql_query_bp, url_prefix="/api")
 
     @app.route("/api/health")
     def health():

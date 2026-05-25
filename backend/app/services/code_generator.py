@@ -70,6 +70,69 @@ def _format_sample_table(columns: list[str], rows: list[list]) -> str:
     return f"{header}\n{separator}\n{body}"
 
 
+def build_sql_prompt(
+    schema_compact: str,
+    user_query: str,
+    db_type: str = "mysql",
+) -> tuple[str, str]:
+    """Build system and user prompts for SQL code generation.
+
+    Returns (system_prompt, user_prompt).
+    """
+    system_prompt = (
+        "You are a SQL query generator. Generate SQL that answers the user's question "
+        "about their database. Rules:\n"
+        "1. Output ONLY valid SQL inside a single ```sql code block.\n"
+        "2. Use only SELECT or WITH queries (read-only).\n"
+        "3. Always include a LIMIT clause (default 100 if the user doesn't specify).\n"
+        "4. Use proper table and column names exactly as shown in the schema.\n"
+        "5. Use appropriate JOINs, GROUP BY, aggregations (COUNT, SUM, AVG, etc.) as needed.\n"
+        "6. Do not include any explanatory text before or after the SQL.\n"
+        f"7. The database is {db_type.upper()}. Use syntax compatible with {db_type.upper()}.\n"
+        "8. For date columns, use standard SQL date functions.\n"
+        "9. Keep queries concise and focused on the specific question."
+    )
+
+    user_prompt = (
+        f"Database schema:\n{schema_compact}\n\n"
+        f"User question: {user_query}"
+    )
+
+    return system_prompt, user_prompt
+
+
+def extract_sql(model_output: str) -> str | None:
+    """Extract SQL from a ```sql ... ``` code block.
+
+    Falls back to extracting from any ``` ... ``` block, then to using the
+    entire output as-is if no code fences are found.
+    Returns None if output is empty.
+    """
+    if not model_output or not model_output.strip():
+        return None
+
+    text = model_output.strip()
+
+    # Try ```sql ... ``` block
+    pattern = r"```sql\s*\n(.*?)```"
+    match = re.search(pattern, text, re.DOTALL)
+    if match:
+        return match.group(1).strip()
+
+    # Try generic ``` ... ``` block
+    pattern = r"```\s*\n(.*?)```"
+    match = re.search(pattern, text, re.DOTALL)
+    if match:
+        return match.group(1).strip()
+
+    # If no code fences, check if the whole output looks like SQL
+    upper = text.upper()
+    if upper.startswith("SELECT") or upper.startswith("WITH"):
+        return text
+
+    return None
+
+
 def extract_code(model_output: str) -> str | None:
     """Extract Python code from a ```python ... ``` code block.
 
