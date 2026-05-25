@@ -2,7 +2,6 @@
 
 Natural-language analytics notebook. Ask questions in plain English — get charts, tables, and insights from your data.
 
-**Stack**: Flask + React + Monaco Editor + Plotly + Ollama Cloud (MiniMax 2.5 / Qwen3-Coder)
 
 ## Features
 
