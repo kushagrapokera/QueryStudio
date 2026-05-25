@@ -35,3 +35,4 @@ backend/_test_*.py
 # Docs
 project.md
 implementation.md
+design.md
